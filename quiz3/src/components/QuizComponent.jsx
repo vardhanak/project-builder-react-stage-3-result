@@ -1,66 +1,69 @@
-import { Component } from "react";
-import { Link } from "react-router-dom";
-import Questions from '../resourses/question.json'
-export default class QuizComponent extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-           qid:0,
-           time:250,
-           ans: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        }
-        //seting time
-        this.intervalid=setInterval(this.timer.bind(this),1000);
-        this.removeid=setInterval(this.removeAns.bind(this),2000)
-    }
-    nextQ=()=>{
-        this.setState({
-            qid:this.state.qid+1
-        })
-        if(this.state.qid>=13){
-            document.getElementById('next').classList.add("dis")//adding pevious button
-       this.setState({
-           qid:14
-       })
-        }else{
-            document.getElementById("prev").classList.remove("dis")
-        }
-    }
-    prevQ=()=>{
-        this.setState({
-            qid:this.state.qid-1
-        })
-        if(this.state.qid<=1){
-            document.getElementById("prev").classList.add("dis")
-            this.setState({
-                qid:0
-            })
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
+import Questions from '../resourses/questions.json'
 
-        }else{
-            document.getElementById("prev").classList.remove("dis")
+export default class QuizComponent extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            qid: 0,
+            time: 250,
+            ans: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }
+        this.intervalId = setInterval(this.timer.bind(this), 1000)
+        this.removeId = setInterval(this.removeAns.bind(this), 2000);
+    }
+
+    nextQ = () => {
+        this.setState({
+            qid: this.state.qid + 1
+        })
+        if (this.state.qid >= 13) {
+            document.getElementById("next").classList.add("dis");
+            this.setState({
+                qid: 14
+            })
+        } else {
+            document.getElementById("prev").classList.remove("dis");
         }
     }
-    quitBtn=()=>{
-        clearInterval(this.intervalid);
-        clearInterval(this.removeid);
-        this.props.sentAns(this.state.ans)
-    }
-    timer=()=>{
+
+    prevQ = () => {
         this.setState({
-            time:this.state.time-1
+            qid: this.state.qid - 1
         })
-        if(this.state.time<1){
+        if (this.state.qid <= 1) {
+            document.getElementById("prev").classList.add("dis");
+            this.setState({
+                qid: 0
+            })
+        } else {
+            document.getElementById("next").classList.remove("dis");
+        }
+    }
+
+    quitBtn = () => {
+        clearInterval(this.intervalId);
+        clearInterval(this.removeId);
+        this.props.sentAns(this.state.ans);
+    }
+
+    timer = () => {
+        this.setState({
+            time: this.state.time - 1
+        })
+        if (this.state.time < 1) {
             this.quitBtn();
         }
     }
-    
+
     optionSelect = (e) => {
         let span = document.createElement("span");
         if (Questions[this.state.qid].answer === e.target.value) {
             span.textContent = "Correct Answer";
             span.classList.add("yes");
             let newAns = [...this.state.ans];
-            newAns[this.state.qid] = 1;//adding this 1 into this.state.ans nd passing it to the ans[]in app.js
+            newAns[this.state.qid] = 1;
             this.setState({
                 ans: [...newAns]
             })
@@ -88,7 +91,8 @@ export default class QuizComponent extends Component{
             }
         }
     }
-    render(){
+
+    render() {
         return (
             <div className="box">
                 <h1>Question</h1>
